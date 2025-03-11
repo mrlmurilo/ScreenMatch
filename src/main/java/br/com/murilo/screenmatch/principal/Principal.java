@@ -49,29 +49,30 @@ public class Principal {
         List<DadosEpisodio> dadosEpisodios = temporadas.stream()
                 .flatMap(t -> t.episodios().stream()).toList();
 
-        System.out.println("\nTop 5 episódios melhor avaliados: ");
+        System.out.println("\nTop 10 episódios melhor avaliados: ");
         dadosEpisodios.stream()
                 .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                .peek(e -> System.out.println("Primeiro Filtro(N/A) " + e))
                 .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
-                .limit(5)
+                .limit(10)
+                .map(e -> e.titulo().toUpperCase())
                 .forEach(System.out::println);
 
-        List<Episodio> episodios = temporadas.stream()
-                .flatMap(t -> t.episodios().stream()
-                        .map(d -> new Episodio(t.numero(), d))
-                ).collect(Collectors.toList());
-
-        System.out.println("A partir de que ano você deseja ver os episódios? ");
-        var ano = teclado.nextInt();
-        teclado.nextLine();
-
-        LocalDate data = LocalDate.of(ano, 1, 1);
-
-        
-
-        episodios.stream()
-                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(data))
-                .forEach(System.out::println);
+//        List<Episodio> episodios = temporadas.stream()
+//                .flatMap(t -> t.episodios().stream()
+//                        .map(d -> new Episodio(t.numero(), d))
+//                ).collect(Collectors.toList());
+//
+//        System.out.println("A partir de que ano você deseja ver os episódios? ");
+//        var ano = teclado.nextInt();
+//        teclado.nextLine();
+//
+//        LocalDate data = LocalDate.of(ano, 1, 1);
+//
+//
+//        episodios.stream()
+//                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(data))
+//                .forEach(System.out::println);
 
     }
 
