@@ -1,6 +1,5 @@
 package br.com.murilo.screenmatch.service;
 
-import br.com.murilo.screenmatch.model.DadosSerie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
