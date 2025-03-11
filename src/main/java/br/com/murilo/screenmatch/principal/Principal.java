@@ -8,10 +8,7 @@ import br.com.murilo.screenmatch.service.ConsumoAPI;
 import br.com.murilo.screenmatch.service.ConverteDados;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
@@ -26,21 +23,14 @@ public class Principal {
     public void exibeMenu() {
         System.out.println("Digite o nome da série: ");
         var nomeSerie = teclado.nextLine();
-        var json = consumoApi.obterDados(
-                URL +
-                        nomeSerie.replace(" ", "+") +
-                        API_KEY
-        );
+        var json = consumoApi.obterDados(URL + nomeSerie.replace(" ", "+") + API_KEY);
 
         var dadosSerie = converterDados.obterDados(json, DadosSerie.class);
 
         List<DadosTemporada> temporadas = new ArrayList<>();
 
         for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
-            json = consumoApi.obterDados(
-                    URL +
-                            nomeSerie.replace(" ", "+") + "&season=" + i +
-                            API_KEY);
+            json = consumoApi.obterDados(URL + nomeSerie.replace(" ", "+") + "&season=" + i + API_KEY);
 
             DadosTemporada dadosTemporada = converterDados.obterDados(json, DadosTemporada.class);
             temporadas.add(dadosTemporada);
@@ -58,11 +48,24 @@ public class Principal {
                 .map(e -> e.titulo().toUpperCase())
                 .forEach(System.out::println);
 
-//        List<Episodio> episodios = temporadas.stream()
-//                .flatMap(t -> t.episodios().stream()
-//                        .map(d -> new Episodio(t.numero(), d))
-//                ).collect(Collectors.toList());
-//
+        List<Episodio> episodios = temporadas.stream()
+                .flatMap(t -> t.episodios().stream()
+                        .map(d -> new Episodio(t.numero(), d))).collect(Collectors.toList());
+
+        System.out.println("Digite o título do ep: ");
+        var trechoTitulo = teclado.nextLine();
+
+        Optional<Episodio> episodio = episodios.stream()
+                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+
+        if (episodio.isPresent()) {
+            System.out.println(episodio.get().getTitulo());
+        } else {
+            System.out.println("Episódio não encontrado");
+        }
+
+
 //        System.out.println("A partir de que ano você deseja ver os episódios? ");
 //        var ano = teclado.nextInt();
 //        teclado.nextLine();
